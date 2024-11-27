@@ -30,7 +30,7 @@ export const renderStory = function(){
     getGameBoard.innerHTML = codeInsert_story;
 }
 
-export const updateStory = function(bloque, item, items){
+export const updateStory = function(bloqueNumber, itemNumber, items){
     // 1.- atrapamos elementos
     let storyImgLeft = document.querySelector("#storyImgLeft");
     let storyImgRight = document.querySelector("#storyImgRight");

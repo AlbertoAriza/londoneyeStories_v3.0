@@ -45,6 +45,7 @@ let data_question_mch = `
 
 
 //GET DE LAS RESPUESTAS
+let getGameBoard = document.querySelector(".gameBoard");
 let getGameSection;
 let getBarraMedia;
 let getAnswerContainerArray;
@@ -69,12 +70,13 @@ let getGameImgRight;
  \__ \ | |/ _ \|   / | |   | _|| |_| | .` | (__  | |  | | (_) | .` \__ \
  |___/ |_/_/ \_\_|_\ |_|   |_|  \___/|_|\_|\___| |_| |___\___/|_|\_|___/
 */
-const render_question_mch = function(){
 
-  // Code Injection
-  if(controlQuizMChCodeInject){
-    controlQuizMChCodeInject = false;
-    getGameBoard.innerHTML = quizScreenMultipleChoice;
+// →  FUNCIÓN QUE RENDERIZA LA PANTALLA DE PREGUNTAS DE LAS MULTIPLE CHOICE QUESTIONS
+export const render_question_mch = function(){
+
+    // Code Injection
+    getGameBoard.innerHTML = data_question_mch;
+
     //REASIGNAMOS LOS GET DE LOS ELEMENTOS
     getGameSection = document.getElementById("gameSection");
     getBarraMedia = document.getElementById('barraMedia');
@@ -86,31 +88,30 @@ const render_question_mch = function(){
     //GET DE LAS IMGs
     getGameImgLeft = document.getElementById("imgGirlLeft");
     getGameImgRight = document.getElementById("imgGirlRight");
-  }
+}
 
-  
-  // Asignamos pregunta y respuestas
-  getQuestionText.innerHTML = questions[setQuestionNumber][numberOfQuestions][0];
-  getAnswerContainerArray.forEach((element, index) => {
-    element.classList.remove('incorrectAnswer', 'incorrectAnswerChosen', 'correctAnswerChosen', 'correctAnswer');
-    element.classList.add('answersContainer');
-    element.innerHTML = questions[setQuestionNumber][numberOfQuestions][index+1]
+// →  FUNCIÓN QUE ACTUALIZA LAS IMÁGENES, PREGUNTA Y OPCIONES DE RESPUESTA DE LA PANTALLA MULTIPLE CHOICE QUESTION
+export const update_question_mch = function(bloqueNumber, itemNumber, items){
+    // Asignamos pregunta y respuestas
+    getQuestionText.innerHTML = items.question;
+    getAnswerContainerArray.forEach((element, index) => {
+        element.classList.remove('incorrectAnswer', 'incorrectAnswerChosen', 'correctAnswerChosen', 'correctAnswer');
+        element.classList.add('answersContainer');
+        element.innerHTML = items.answers[index]
   });
 
-  // Asignamos imágenes
-  getGameImgLeft.src = '../highSchoolStories/girl1happy.png';
-  if(setQuestionNumber === 0) {
-    getGameSection.style.backgroundImage = "url(../highSchoolStories/fondoAula.jpg)";
-    getGameImgRight.src = '../highSchoolStories/girl2happy.png';
-  }else if(setQuestionNumber === 1) {
-    getGameSection.style.backgroundImage = "url(../highSchoolStories/fondoCafe.webp)";
-    getGameImgRight.src = '../highSchoolStories/boy1.png';
-  }
-  soundEffects.sfxNext.play();
+    // Asignamos imágenes
+    if(items.backgroundImage) getGameSection.style.backgroundImage = `url(${items.backgroundImage})`;
+    if(items.imagen1) getGameImgLeft.src = items.imagen1;
+    if(items.imagen2) getGameImgRight.src = items.imagen2;
+
+    // Lanzamos sfx de nueva pregunta
+    const sound = new Audio('sfx/sfxNext.m4a');
+    sound.play();
 
   // Creamos función de lógica de clicks para asignar al eventListener.
   
-  const logicaDeClicks = function(e){
+  const loadEvents = function(e){
     let clicked = e.target.closest('.answerContainer');
     
     //  Guarda por si hace click fuera de los botones.
