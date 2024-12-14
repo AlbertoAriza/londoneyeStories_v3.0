@@ -36,19 +36,36 @@ export const updateStory = function(bloqueNumber, itemNumber, items){
     let storyImgRight = document.querySelector("#storyImgRight");
     let storyText = document.querySelector("#storyText");
     let getStoryContainer = document.querySelector("#storyContainer");
-    // 2.- ajustamos elementos
+    // 2.- ajustamos elementos de imágenes
+        // 2.1.- ajustamos imagen de fondo
     if(items.imagenFondo) getStoryContainer.style.backgroundImage = `url(${items.imagenFondo})`;
-    if(items.imagen1) storyImgLeft.src = items.imagen1;
-    if(items.imagen2) storyImgRight.src = items.imagen2;
+    //else getStoryContainer.style.backgroundImage = "none";
+        // 2.2.- ajustamos imagen de personaje 1
+    if(items.imagen1 =="empty") storyImgLeft.src = "";
+    else if(items.imagen1) storyImgLeft.src = items.imagen1;
+        // 2.3.- ajustamos imagen de personaje 2
+    if(items.imagen2 ==="empty") storyImgRight.src = "";
+        // 2.4.- ajustamos imagen de bocadillo
+    else if(items.imagen2) storyImgRight.src = items.imagen2;
     if(items.bocadillo && items.bocadillo === "right") {
-        storyText.classList.remove("bocadilloToLeft")
-        storyText.classList.add("bocadilloToRight")
+        storyText.classList.remove("bocadilloToLeft");
+        storyText.classList.add("bocadilloToRight");
     }else if(items.bocadillo && items.bocadillo === "left") {
-        storyText.classList.remove("bocadilloToRight")
-        storyText.classList.add("bocadilloToLeft")
-
+        storyText.classList.remove("bocadilloToRight");
+        storyText.classList.add("bocadilloToLeft");
     };
     storyText.innerHTML = items.frase;
+
+    // 3.- Ejecutamos sonidos
+    if(items.sound[0] !== "empty") {
+        items.sound.forEach((sfx) => {
+            const sound = new Audio(sfx);
+            sound.play();
+        });
+        const sound = new Audio(items.sfx);
+        sound.volume = 0.1
+        sound.play();
+    }
 }
 
 export const loadEvents = function(fcn){

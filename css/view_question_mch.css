@@ -47,16 +47,16 @@ h1 {
 /*  CONFIGURACIÓN DE LOS BOTONES DE RESPUESTAS*/
 .answerContainer{
   border: none;
-  background: var(--btnGameAnswerColor);
+  color: white;
   font-size: 1.3em;
   text-align: center;
+  background: var(--btnGameAnswerColor);
   padding: 10px;
   width: 90vw;
   cursor: pointer;
   position: relative;
-  color: white;
 }
-.answersContainer:hover {
+.answerContainer:hover {
   background: var(--btnGameAnswerColorHover);
 }
 .answerContainer:active {
@@ -66,19 +66,9 @@ h1 {
   border-bottom: 3px solid var(--borderContainerActiveColor);
 }
 
-.incorrectAnswerChosen {
-  font-size: 1.3em;
-  text-align: center;
-  background: var(--btnGameAnswerColorWrong);
-  padding-top: 7px;
-  padding-bottom: 7px;
-  width: 90vw;
-  cursor: pointer;
-  position: relative;
-  border-top: 3px solid var(--borderContainerActiveColor);
-  border-bottom: 3px solid var(--borderContainerActiveColor);;
-}
 .incorrectAnswer {
+  border: none;
+  color: white;
   font-size: 1.3em;
   text-align: center;
   background: var(--btnGameAnswerColorWrong);
@@ -89,19 +79,9 @@ h1 {
   position: relative;
 }
 
-.correctAnswerChosen {
-  font-size: 1.3em;
-  text-align: center;
-  background: var(--btnGameAnswerColorRight);
-  padding-top: 7px;
-  padding-bottom: 7px;
-  width: 90vw;
-  cursor: pointer;
-  position: relative;
-  border-top: 3px solid var(--borderContainerActiveColor);;
-  border-bottom: 3px solid var(--borderContainerActiveColor);;
-}
 .correctAnswer {
+  border: none;
+  color: white;
   font-size: 1.3em;
   text-align: center;
   background: var(--btnGameAnswerColorRight);

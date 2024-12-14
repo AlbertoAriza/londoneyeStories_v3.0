@@ -9,9 +9,6 @@ let data_question_mch = `
 
         <!--DATOS BARRA MEDIA DE PANTALLA PARA RESPUESTAS-->
         <div id="barraMedia">
-            <button class="answerContainer answersContainer" id="answerContainer1" data-code="4">Answer 1</button>
-            <button class="answerContainer answersContainer" id="answerContainer2" data-code="5">Answer 2</button>
-            <button class="answerContainer answersContainer" id="answerContainer3" data-code="6">Answer 3</button>
         </div>
 
         <!--GRÁFICOS DE LA PARTE INFERIOR DE LA PANTALLA-->
@@ -50,26 +47,14 @@ let getGameSection;
 let getBarraMedia;
 let getAnswerContainerArray;
 
-//GET DE LAS PREGUNTAS Y VARIABLES DE CONTROL DE ARRAYS DE PREGUNTAS
+//GET DE LOS DISTINTOS ELEMENTOS DE LAS MULTIPLE CHOICE QUESTIONS
 let getQuestionText;
-let setQuestionNumber = 0; // CONTROLA EL BLOQUE DE CONVERSACIÓN EN EL QUE ESTAMOS
-let numberOfQuestions = 0; // CONTROLA LA PREGUNTA EN LA QUE NOS ENCONTRAMOS DENTRO DEL BLOQUE
 
 //GET DE LAS IMGs
-
 let getGameImgLeft;
 let getGameImgRight;
 
 
-
-
-
-
-/*___ _____ _   ___ _____   ___ _   _ _  _  ___ _____ ___ ___  _  _ ___ 
- / __|_   _/_\ | _ \_   _| | __| | | | \| |/ __|_   _|_ _/ _ \| \| / __|
- \__ \ | |/ _ \|   / | |   | _|| |_| | .` | (__  | |  | | (_) | .` \__ \
- |___/ |_/_/ \_\_|_\ |_|   |_|  \___/|_|\_|\___| |_| |___\___/|_|\_|___/
-*/
 
 // →  FUNCIÓN QUE RENDERIZA LA PANTALLA DE PREGUNTAS DE LAS MULTIPLE CHOICE QUESTIONS
 export const render_question_mch = function(){
@@ -80,11 +65,10 @@ export const render_question_mch = function(){
     //REASIGNAMOS LOS GET DE LOS ELEMENTOS
     getGameSection = document.getElementById("gameSection");
     getBarraMedia = document.getElementById('barraMedia');
-    getAnswerContainerArray = document.querySelectorAll('.answerContainer');
+    //getAnswerContainerArray = document.querySelectorAll('.answerContainer');
 
     //GET DE LAS PREGUNTAS Y VARIABLES DE CONTROL DE ARRAYS DE PREGUNTAS
     getQuestionText = document.getElementById("questionText");
-
     //GET DE LAS IMGs
     getGameImgLeft = document.getElementById("imgGirlLeft");
     getGameImgRight = document.getElementById("imgGirlRight");
@@ -92,92 +76,34 @@ export const render_question_mch = function(){
 
 // →  FUNCIÓN QUE ACTUALIZA LAS IMÁGENES, PREGUNTA Y OPCIONES DE RESPUESTA DE LA PANTALLA MULTIPLE CHOICE QUESTION
 export const update_question_mch = function(bloqueNumber, itemNumber, items){
-    // Asignamos pregunta y respuestas
+
+    // Limpiar respuestas anteriores
+    getBarraMedia.innerHTML = "";
+
+    // Asignamos pregunta
     getQuestionText.innerHTML = items.question;
-    getAnswerContainerArray.forEach((element, index) => {
-        element.classList.remove('incorrectAnswer', 'incorrectAnswerChosen', 'correctAnswerChosen', 'correctAnswer');
-        element.classList.add('answersContainer');
-        element.innerHTML = items.answers[index]
-  });
+
+    // Generar respuestas dinámicamente
+    items.answers.forEach((answer, index) => {
+      const answerButton = document.createElement('button');
+      answerButton.classList.add('answerContainer');
+      answerButton.dataset.code = index; // Asignar data-code automáticamente
+      answerButton.innerHTML = answer;
+      getBarraMedia.appendChild(answerButton);
+      console.log(answerButton);
+      
+    });
 
     // Asignamos imágenes
-    if(items.backgroundImage) getGameSection.style.backgroundImage = `url(${items.backgroundImage})`;
-    if(items.imagen1) getGameImgLeft.src = items.imagen1;
-    if(items.imagen2) getGameImgRight.src = items.imagen2;
+    if(items.imagenFondo) getGameSection.style.backgroundImage = `url(${items.imagenFondo})`;
+    getGameImgLeft.src = items.imagen1;
+    getGameImgRight.src = items.imagen2;
 
     // Lanzamos sfx de nueva pregunta
     const sound = new Audio('sfx/sfxNext.m4a');
     sound.play();
+}
 
-  // Creamos función de lógica de clicks para asignar al eventListener.
-  
-  const loadEvents = function(e){
-    let clicked = e.target.closest('.answerContainer');
-    
-    //  Guarda por si hace click fuera de los botones.
-    if(!clicked) return;
-
-    // Meter aquí todo el código al hacer click al botón.
-    // 1.- Mirar si la respuesta es verdadera o falsa.
-    // 1.1.- Si es verdadera, ponerla en verde
-    if(questions[setQuestionNumber][numberOfQuestions][clicked.dataset.code]) {
-      clicked.classList.remove('answersContainer');
-      clicked.classList.add('correctAnswerChosen');
-      // Cambiar caras de muñecas y sonidos
-      getGameImgLeft.src = "../highSchoolStories/girl1veryHappy.png"
-      soundEffects.sfxBingo.play();
-      quizPreguntasAcertadas++;
-      quizPreguntasHechas++
-    }
-    // 1.2.- Si es falsa, ponerla en rojo
-    else {
-      clicked.classList.remove('answersContainer');
-      clicked.classList.add('incorrectAnswerChosen');
-      // Cambiar caras de muñecas y sonidos
-      getGameImgLeft.src = "../highSchoolStories/girl1surprised.png"
-      soundEffects.sfxWrongAnswer.play();
-      quizPreguntasHechas++;
-    }
-      
-    // cambiar el resto de respuestas a sus colores de verdadero o falso
-    setTimeout(function(){
-      getAnswerContainerArray.forEach(function(element){
-        if(element === clicked) return;
-        if (questions[setQuestionNumber][numberOfQuestions][element.dataset.code]) {
-          element.classList.remove('answersContainer');
-          element.classList.add('correctAnswer');
-        }
-        else {
-          element.classList.remove('answersContainer');
-          element.classList.add('incorrectAnswer');
-        }
-      });
-    }, 1000);
-
-    //  Anulamos el evento para que no se hagan dobles clicks
-    getBarraMedia.removeEventListener('click', logicaDeClicks);
-
-    //  Ajustar los contadores de preguntas y pasar a la siguiente pregunta.
-    setTimeout(function(){
-      numberOfQuestions++;
-      if(numberOfQuestions < questions[setQuestionNumber].length) activityMultipleChoiceStartFunction();
-      else {
-        setQuestionNumber++;
-        numberOfQuestions = 0;
-        controlQuizMChCodeInject = true;
-        controlStoryScreenCodeInjection = true;
-
-        quizPreguntasAcertadasTotales += quizPreguntasAcertadas;
-        quizPreguntasHechasTotales += quizPreguntasHechas;
-        
-        checkProgressFunction(quizPreguntasAcertadas, quizPreguntasHechas);
-        quizPreguntasAcertadas = 0;
-        quizPreguntasHechas = 0;
-      }
-      
-    }, 3000)
-  };
-
-
-  getBarraMedia.addEventListener('click', logicaDeClicks);
+export const loadEvents = function(func){
+  document.getElementById('barraMedia').addEventListener('click', func);
 }
